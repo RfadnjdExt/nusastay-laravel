@@ -24,6 +24,7 @@
                 <li><a href="{{ route('home') }}">Home</a></li>
                 <li><a href="{{ route('hotels.search') }}">Search</a></li>
                 <li><a href="{{ route('blog.index') }}">Blog</a></li>
+                <li><a href="{{ route('payment.index') }}">Pembayaran</a></li>
             </ul>
 
             <div class="nav-actions">
@@ -36,6 +37,7 @@
                     <div class="user-menu-dropdown hidden">
                         <div class="user-menu-content">
                             <a href="{{ route('profile.index') }}">My Bookings</a>
+                            <a href="{{ route('payment.index') }}">Pembayaran</a>
                             <a href="{{ route('profile.settings') }}">Settings</a>
                             <hr>
                             <form method="POST" action="{{ route('logout') }}">

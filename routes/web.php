@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\BlogController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,4 +44,8 @@ Route::middleware('auth')->group(function () {
 
     // Blog
     Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+
+    // Payment
+    Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
+    Route::get('/payment/{bookingCode}', [PaymentController::class, 'show'])->name('payment.show');
 });

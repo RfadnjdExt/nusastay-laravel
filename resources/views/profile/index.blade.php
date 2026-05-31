@@ -20,6 +20,10 @@
                         <a href="{{ route('profile.index') }}" style="padding: 12px 16px; border-radius: var(--radius-sm); background: var(--color-primary); color: var(--color-light); font-weight: 600;">
                             My Bookings
                         </a>
+                        <a href="{{ route('payment.index') }}" style="padding: 12px 16px; border-radius: var(--radius-sm); color: var(--color-gray); transition: var(--transition);"
+                            onmouseover="this.style.background='var(--color-bg)'" onmouseout="this.style.background='transparent'">
+                            💳 Pembayaran
+                        </a>
                         <a href="{{ route('profile.settings') }}" style="padding: 12px 16px; border-radius: var(--radius-sm); color: var(--color-gray); transition: var(--transition);"
                             onmouseover="this.style.background='var(--color-bg)'" onmouseout="this.style.background='transparent'">
                             Settings
