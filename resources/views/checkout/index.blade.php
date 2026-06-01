@@ -62,6 +62,12 @@
 .payment-option input {
     margin-right: 8px;
 }
+.payment-option img {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
 @media (max-width: 980px) {
     .checkout-shell { grid-template-columns: 1fr; }
 }
@@ -82,7 +88,7 @@
         <div class="checkout-shell">
             <div class="checkout-card">
                 <div style="margin-bottom: 24px;">
-                    <div class="helper-chip">1 kamar • maksimal 5 tamu</div>
+                    <div class="helper-chip">1 kamar • maksimal {{ $maxGuests }} tamu</div>
                     <h1 style="font-size: 2rem; margin: 14px 0 8px;">Booking Detail</h1>
                     <p style="color: var(--color-gray);">Isi nama dan biodata tamu, lalu pilih pembayaran GoPay atau DANA.</p>
                 </div>
@@ -99,7 +105,7 @@
                         <div>
                             <label for="guests" style="display:block; margin-bottom:8px; font-weight:600;">Jumlah Tamu</label>
                             <select id="guests" name="guests" class="checkout-select" required>
-                                @for($i = 1; $i <= 5; $i++)
+                                @for($i = 1; $i <= $maxGuests; $i++)
                                     <option value="{{ $i }}" {{ old('guests', 1) == $i ? 'selected' : '' }}>{{ $i }} tamu</option>
                                 @endfor
                             </select>
@@ -140,14 +146,13 @@
                     <div>
                         <label style="display:block; margin-bottom:10px; font-weight:600;">Metode Pembayaran</label>
                         <div class="payment-option-grid">
-                            <label class="payment-option">
-                                <input type="radio" name="payment_method" value="gopay" {{ old('payment_method', 'gopay') === 'gopay' ? 'checked' : '' }}>
-                                GoPay
-                            </label>
-                            <label class="payment-option">
-                                <input type="radio" name="payment_method" value="dana" {{ old('payment_method') === 'dana' ? 'checked' : '' }}>
-                                DANA
-                            </label>
+                            @foreach($paymentMethods as $key => $pm)
+                                <label class="payment-option">
+                                    <input type="radio" name="payment_method" value="{{ $key }}" {{ old('payment_method', $defaultPayment) === $key ? 'checked' : '' }}>
+                                    <img src="{{ asset($pm['file']) }}" alt="{{ $pm['label'] }}" onerror="this.src='{{ asset(str_replace('.svg', '.png', $pm['file'])) }}'">
+                                    {{ $pm['label'] }}
+                                </label>
+                            @endforeach
                         </div>
                     </div>
 

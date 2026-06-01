@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Hotel;
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
@@ -12,25 +13,70 @@ class CheckoutController extends Controller
     public function index($hotelId)
     {
         $hotel = Hotel::findOrFail($hotelId);
+        $maxGuests = max(1, (int) $hotel->max_guests);
 
-        return view('checkout.index', compact('hotel'));
+        // Load payment method logos from public/images/payments
+        $paymentMethods = [];
+        $displayMap = [
+            'gopay' => 'GoPay', 'dana' => 'DANA', 'ovo' => 'OVO', 'shopeepay' => 'ShopeePay',
+            'mandiri' => 'Mandiri', 'bca' => 'BCA', 'bri' => 'BRI', 'bsi' => 'BSI',
+            'card' => 'Card', 'timezone-card' => 'Timezone Card', 'e-wallet' => 'E-Wallet'
+        ];
+
+        $path = public_path('images/payments');
+        if (File::exists($path)) {
+            foreach (File::files($path) as $f) {
+                $ext = strtolower($f->getExtension());
+                if (!in_array($ext, ['svg', 'png', 'jpg', 'jpeg'])) continue;
+                $name = pathinfo($f->getFilename(), PATHINFO_FILENAME);
+                $key = strtolower($name);
+                $paymentMethods[$key] = [
+                    'file' => 'images/payments/' . $f->getFilename(),
+                    'label' => $displayMap[$key] ?? ucfirst($name),
+                ];
+            }
+        }
+
+        if (empty($paymentMethods)) {
+            $paymentMethods = [
+                'gopay' => ['file' => 'images/payments/gopay.png', 'label' => 'GoPay'],
+                'dana' => ['file' => 'images/payments/dana.png', 'label' => 'DANA'],
+            ];
+        }
+
+        $defaultPayment = array_key_first($paymentMethods);
+
+        return view('checkout.index', compact('hotel', 'maxGuests', 'paymentMethods', 'defaultPayment'));
     }
 
     public function process(Request $request)
     {
+        $hotel = Hotel::findOrFail($request->input('hotel_id'));
+        $maxGuests = max(1, (int) $hotel->max_guests);
+
+        // Build allowed payment keys from files available
+        $paymentPath = public_path('images/payments');
+        $allowed = [];
+        if (File::exists($paymentPath)) {
+            foreach (File::files($paymentPath) as $f) {
+                $allowed[] = strtolower(pathinfo($f->getFilename(), PATHINFO_FILENAME));
+            }
+        }
+        if (empty($allowed)) {
+            $allowed = ['gopay', 'dana'];
+        }
+
         $validated = $request->validate([
             'hotel_id' => ['required', 'exists:hotels,id'],
             'check_in' => ['required', 'date', 'after:today'],
             'check_out' => ['required', 'date', 'after:check_in'],
             'guest_name' => ['required', 'string', 'max:255'],
             'guest_bio' => ['required', 'string', 'max:1000'],
-            'guests' => ['required', 'integer', 'min:1', 'max:5'],
+            'guests' => ['required', 'integer', 'min:1', 'max:' . $maxGuests],
             'room_type' => ['required', 'string'],
             'special_requests' => ['nullable', 'string', 'max:500'],
-            'payment_method' => ['required', 'in:gopay,dana'],
+            'payment_method' => ['required', 'in:' . implode(',', $allowed)],
         ]);
-
-        $hotel = Hotel::findOrFail($validated['hotel_id']);
 
         // Calculate nights and total price
         $checkIn = \Carbon\Carbon::parse($validated['check_in']);
