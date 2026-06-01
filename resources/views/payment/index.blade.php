@@ -186,10 +186,8 @@
 
                     <select name="method" class="filter-select" onchange="this.form.submit()">
                         <option value="">Semua Metode</option>
-                        <option value="credit_card"    {{ request('method') == 'credit_card'    ? 'selected' : '' }}>💳 Kartu Kredit</option>
-                        <option value="debit_card"     {{ request('method') == 'debit_card'     ? 'selected' : '' }}>💳 Kartu Debit</option>
-                        <option value="bank_transfer"  {{ request('method') == 'bank_transfer'  ? 'selected' : '' }}>🏦 Transfer Bank</option>
-                        <option value="e_wallet"       {{ request('method') == 'e_wallet'       ? 'selected' : '' }}>📱 E-Wallet</option>
+                        <option value="gopay"          {{ request('method') == 'gopay'          ? 'selected' : '' }}>📱 GoPay</option>
+                        <option value="dana"           {{ request('method') == 'dana'           ? 'selected' : '' }}>📱 DANA</option>
                     </select>
 
                     @if(request('status') || request('method'))
@@ -205,10 +203,8 @@
                 @forelse($bookings as $booking)
                     @php
                         $methodLabel = match($booking->payment_method) {
-                            'credit_card'   => ['icon' => '💳', 'label' => 'Kartu Kredit'],
-                            'debit_card'    => ['icon' => '💳', 'label' => 'Kartu Debit'],
-                            'bank_transfer' => ['icon' => '🏦', 'label' => 'Transfer Bank'],
-                            'e_wallet'      => ['icon' => '📱', 'label' => 'E-Wallet'],
+                            'gopay'         => ['icon' => '📱', 'label' => 'GoPay'],
+                            'dana'          => ['icon' => '📱', 'label' => 'DANA'],
                             default         => ['icon' => '💰', 'label' => ucfirst($booking->payment_method)],
                         };
                         $statusColor = match($booking->payment_status) {

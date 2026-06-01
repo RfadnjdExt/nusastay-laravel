@@ -12,6 +12,7 @@ class CheckoutController extends Controller
     public function index($hotelId)
     {
         $hotel = Hotel::findOrFail($hotelId);
+
         return view('checkout.index', compact('hotel'));
     }
 
@@ -21,14 +22,12 @@ class CheckoutController extends Controller
             'hotel_id' => ['required', 'exists:hotels,id'],
             'check_in' => ['required', 'date', 'after:today'],
             'check_out' => ['required', 'date', 'after:check_in'],
-            'guests' => ['required', 'integer', 'min:1'],
+            'guest_name' => ['required', 'string', 'max:255'],
+            'guest_bio' => ['required', 'string', 'max:1000'],
+            'guests' => ['required', 'integer', 'min:1', 'max:5'],
             'room_type' => ['required', 'string'],
             'special_requests' => ['nullable', 'string', 'max:500'],
-            'payment_method' => ['required', 'in:credit_card,debit_card,bank_transfer,e_wallet'],
-            'cardholder_name' => ['required_if:payment_method,credit_card,debit_card', 'string', 'max:255'],
-            'card_number' => ['required_if:payment_method,credit_card,debit_card', 'string', 'size:16'],
-            'expiry_date' => ['required_if:payment_method,credit_card,debit_card', 'string'],
-            'cvv' => ['required_if:payment_method,credit_card,debit_card', 'string', 'size:3'],
+            'payment_method' => ['required', 'in:gopay,dana'],
         ]);
 
         $hotel = Hotel::findOrFail($validated['hotel_id']);
@@ -59,6 +58,8 @@ class CheckoutController extends Controller
             'guests' => $validated['guests'],
             'nights' => $nights,
             'room_type' => $validated['room_type'],
+            'guest_name' => $validated['guest_name'],
+            'guest_bio' => $validated['guest_bio'],
             'special_requests' => $validated['special_requests'],
             'base_price' => $basePrice,
             'discount' => $discount,
@@ -67,11 +68,11 @@ class CheckoutController extends Controller
             'service_fee' => $serviceFee,
             'total_price' => $totalPrice,
             'payment_method' => $validated['payment_method'],
-            'payment_status' => 'completed',
-            'booking_status' => 'confirmed',
+            'payment_status' => 'pending',
+            'booking_status' => 'pending',
         ]);
 
-        return redirect()->route('profile.index')
-            ->with('success', 'Booking confirmed! Your booking code is: ' . $bookingCode);
+        return redirect()->route('payment.show', $bookingCode)
+            ->with('success', 'Booking created! Complete your payment using ' . strtoupper($validated['payment_method']) . '.');
     }
 }

@@ -126,7 +126,7 @@
                                                 Rp {{ number_format($hotel->price, 0, ',', '.') }}
                                             </div>
                                         @endif
-                                        <div style="color: var(--color-gray); font-size: 0.875rem;">per night</div>
+                                        <div style="color: var(--color-gray); font-size: 0.875rem;">/ night</div>
                                     </div>
                                 </div>
                             </div>

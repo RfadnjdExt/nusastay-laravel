@@ -76,7 +76,7 @@
                                         <p style="color: var(--color-gray); font-size: 0.875rem; margin-bottom: 12px;">{{ $similar->city }}</p>
                                         <div style="display: flex; justify-content: space-between; align-items: center;">
                                             <span style="color: var(--color-gold); font-weight: 700;">⭐ {{ $similar->rating }}</span>
-                                            <span style="font-weight: 700; color: var(--color-primary);">Rp {{ number_format($similar->price, 0, ',', '.') }}</span>
+                                            <span style="font-weight: 700; color: var(--color-primary);">Rp {{ number_format($similar->price, 0, ',', '.') }} / night</span>
                                         </div>
                                     </div>
                                 </a>
@@ -101,7 +101,7 @@
                                 Rp {{ number_format($hotel->price, 0, ',', '.') }}
                             </div>
                         @endif
-                        <div style="color: var(--color-gray);">per night</div>
+                        <div style="color: var(--color-gray);">/ night</div>
                     </div>
 
                     <div style="padding: 20px; background: var(--color-bg); border-radius: var(--radius-md); margin-bottom: 24px;">

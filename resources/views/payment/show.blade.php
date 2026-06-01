@@ -95,10 +95,8 @@
 
             @php
                 $methodLabel = match($booking->payment_method) {
-                    'credit_card'   => ['icon' => '💳', 'label' => 'Kartu Kredit'],
-                    'debit_card'    => ['icon' => '💳', 'label' => 'Kartu Debit'],
-                    'bank_transfer' => ['icon' => '🏦', 'label' => 'Transfer Bank'],
-                    'e_wallet'      => ['icon' => '📱', 'label' => 'E-Wallet'],
+                    'gopay'         => ['icon' => '📱', 'label' => 'GoPay'],
+                    'dana'          => ['icon' => '📱', 'label' => 'DANA'],
                     default         => ['icon' => '💰', 'label' => ucfirst($booking->payment_method)],
                 };
                 $statusColor = match($booking->payment_status) {

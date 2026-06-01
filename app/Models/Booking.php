@@ -18,6 +18,8 @@ class Booking extends Model
         'guests',
         'nights',
         'room_type',
+        'guest_name',
+        'guest_bio',
         'special_requests',
         'base_price',
         'discount',
