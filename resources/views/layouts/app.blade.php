@@ -14,7 +14,7 @@
     @stack('styles')
 </head>
 <body>
-    <nav class="scrolled">
+    <nav class="main-nav scrolled">
         <div class="container flex items-center justify-between">
             <a href="{{ route('home') }}" class="logo">
                 <span>🏝️</span> Nusa Stay
